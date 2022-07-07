@@ -6,8 +6,10 @@ function App(){
 const [endPoint, setEndPoints] = useState("")
 //  the container is the data we get from the api
 const [trackscontainer,setTracksContainer] = useState([])
-// whenever i type something this will call the fetchMe function
+//  the container is the data we get from the api
+const [searchresults,setSearchResults] = useState([])
 
+// whenever i type something this will call the fetchMe function
 useEffect(() => {
   fetchData()
 },[])
@@ -23,7 +25,7 @@ useEffect(() => {
     };
 axios.request(options, {timeout: 500}).then(function (response) {
   console.log(response.data.response.songs)
-setTracksContainer(response.data.response.songs)
+  setTracksContainer(response.data.response.songs)
 }).catch(function (error) {
 	console.error(error);
 });
@@ -44,13 +46,18 @@ params: {q:  {endPoint}},
 // to prevent page refreshing every time we click search
 const submitHandler = (e) => {
   e.preventDefault()
+  if (endPoint !== ""){
 axios.request(optionsendPoint, {timeout: 500}).then(function (response) {
   console.log(response.data.response.hits)
-setTracksContainer(response.data.response.hits)
+setSearchResults(response.data.response.hits)
 }).catch(function (error) {
 	console.error(error);
 });
+  }else{
+setSearchResults(trackscontainer)    
+  }
 }
+  const searched = this.state.searchresults;
 
   return (
 <div className="App">
@@ -63,8 +70,6 @@ setTracksContainer(response.data.response.hits)
 <div class="card-group">
   <div class="row">
 {trackscontainer.map((item) => 
-
-
 (<div class="col=xl-2 col-lg-3 col-md-6 col-sm-12">
 <div class="card" key={item.id}>
 <img src={item.song_art_image_thumbnail_url}/>
@@ -77,7 +82,21 @@ setTracksContainer(response.data.response.hits)
     </div>
   </div>
   </div>
-    ))}
+))}
+{searchresults.map((item) => 
+(<div class="col=xl-2 col-lg-3 col-md-6 col-sm-12">
+<div class="card" key={item.id}>
+<img src={item.result.song_art_image_thumbnail_url}/>
+    <div class="card-body">
+      <h5 class="card-title">{item.result.full_title}</h5>
+      <p class="card-text">{item.result.artist_names}</p>
+    </div>
+    <div class="card-footer">
+    <a href={item.result.url}>Check out the lyrics on Genius</a>
+    </div>
+  </div>
+  </div>
+))}
 </div>
 </div>
 </div>
