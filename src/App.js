@@ -8,7 +8,6 @@ const [endPoint, setEndPoints] = useState("")
 const [trackscontainer,setTracksContainer] = useState([])
 //  the container is the data we get from the api
 const [searchresults,setSearchResults] = useState([])
-
 // whenever i type something this will call the fetchMe function
 useEffect(() => {
   fetchData()
@@ -46,19 +45,16 @@ params: {q:  {endPoint}},
 // to prevent page refreshing every time we click search
 const submitHandler = (e) => {
   e.preventDefault()
-  if (endPoint !== ""){
+if (endPoint !== ""){
 axios.request(optionsendPoint, {timeout: 500}).then(function (response) {
   console.log(response.data.response.hits)
 setSearchResults(response.data.response.hits)
 }).catch(function (error) {
 	console.error(error);
 });
-  }else{
-setSearchResults(trackscontainer)    
-  }
+setTracksContainer([])
 }
-  const searched = this.state.searchresults;
-
+}
   return (
 <div className="App">
 <form className="input-group" >
@@ -72,7 +68,7 @@ setSearchResults(trackscontainer)
 {trackscontainer.map((item) => 
 (<div class="col=xl-2 col-lg-3 col-md-6 col-sm-12">
 <div class="card" key={item.id}>
-<img src={item.song_art_image_thumbnail_url}/>
+<img src={item.header_image_thumbnail_url}/>
     <div class="card-body">
       <h5 class="card-title">{item.full_title}</h5>
       <p class="card-text">{item.artist_names}</p>
@@ -83,23 +79,24 @@ setSearchResults(trackscontainer)
   </div>
   </div>
 ))}
-{searchresults.map((item) => 
-(<div class="col=xl-2 col-lg-3 col-md-6 col-sm-12">
-<div class="card" key={item.id}>
-<img src={item.result.song_art_image_thumbnail_url}/>
-    <div class="card-body">
-      <h5 class="card-title">{item.result.full_title}</h5>
-      <p class="card-text">{item.result.artist_names}</p>
-    </div>
-    <div class="card-footer">
-    <a href={item.result.url}>Check out the lyrics on Genius</a>
-    </div>
-  </div>
-  </div>
+ {searchresults.map((item) => 
+    (<div class="col=xl-2 col-lg-3 col-md-6 col-sm-12">
+    <div class="card" key={item.id}>
+    <img src={item.result.song_art_image_thumbnail_url}/>
+        <div class="card-body">
+          <h5 class="card-title">{item.result.full_title}</h5>
+          <p class="card-text">{item.result.artist_names}</p>
+        </div>
+        <div class="card-footer">
+        <a href={item.result.url}>Check out the lyrics on Genius</a>
+        </div>
+      </div>
+      </div>
 ))}
 </div>
 </div>
 </div>
+
 )
 };
 
